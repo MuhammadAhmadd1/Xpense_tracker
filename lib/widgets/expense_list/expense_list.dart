@@ -1,7 +1,5 @@
 // This file defines the `ExpenseList` widget, a stateless widget that displays a scrollable list of expenses.
 // It uses a `ListView.builder` to efficiently render only the visible items in the list.
-// Each expense item displays its title by accessing the `title` property of the `ExpenseStructure` model.
-
 import 'package:flutter/material.dart';
 import 'package:xtrack/modle/expense_structure.dart';
 import 'package:xtrack/widgets/expense_list/expense_items.dart';
