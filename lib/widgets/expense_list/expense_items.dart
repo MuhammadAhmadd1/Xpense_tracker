@@ -1,4 +1,5 @@
 //for outputting individual list items
+//in what format list will be output
 import 'package:flutter/material.dart';
 import 'package:xtrack/modle/expense_structure.dart';
 

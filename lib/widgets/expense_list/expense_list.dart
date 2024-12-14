@@ -13,7 +13,7 @@ class ExpenseList extends StatelessWidget {
         //list view makes the list scrollable
         //builder tells to create / build list items when they are visible or about to become visible.
         ListView.builder(
-      //as many times item.length is called itemBuilder will be called the same times
+      //as many times expenses.length is called itemBuilder will be called the same times
       itemCount: expenses.length,
       itemBuilder: (context, index) => ExpenseItems(
         expenses[index],

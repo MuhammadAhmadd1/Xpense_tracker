@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:xtrack/widgets/expense_list/expense_list.dart';
 import 'package:xtrack/modle/expense_structure.dart';
+import 'package:xtrack/widgets/new_expense.dart';
 
 class Expenses extends StatefulWidget {
   const Expenses({super.key});
@@ -22,11 +23,33 @@ class _ExpensesState extends State<Expenses> {
         title: 'Cinema',
         amount: 18,
         date: DateTime.now(),
-        category: Category.leisure)
+        category: Category.leisure),
+    ExpenseStructure(
+        title: 'Biryani',
+        amount: 18,
+        date: DateTime.now(),
+        category: Category.food)
   ];
+
+  void _openAddExpenseOverLay() {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => NewExpense(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('XpenseTrack'),
+        actions: [
+          IconButton(
+            onPressed: _openAddExpenseOverLay,
+            icon: Icon(Icons.add),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           //CHART
