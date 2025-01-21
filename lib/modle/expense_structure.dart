@@ -9,13 +9,14 @@ final formatter = DateFormat.yMd();
 //variable to store unique id for every expense
 const uuid = Uuid();
 
-enum Category { food, travel, leisure, work }
+enum Category { food, travel, leisure, work, shopping }
 
 const categoryIcons = {
   Category.food: Icons.lunch_dining,
   Category.leisure: Icons.movie_rounded,
   Category.travel: Icons.flight_takeoff,
   Category.work: Icons.work,
+  Category.shopping: Icons.shopping_bag,
 };
 
 class ExpenseStructure {
