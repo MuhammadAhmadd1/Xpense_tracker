@@ -15,18 +15,13 @@ class Expenses extends StatefulWidget {
 class _ExpensesState extends State<Expenses> {
   final List<ExpenseStructure> _registeredExpense = [
     ExpenseStructure(
-        title: 'Flutter course',
-        amount: 16.85,
-        date: DateTime.now(),
-        category: Category.work),
-    ExpenseStructure(
         title: 'Cinema',
-        amount: 18,
+        amount: 18.23,
         date: DateTime.now(),
         category: Category.leisure),
     ExpenseStructure(
         title: 'Biryani',
-        amount: 18,
+        amount: 3.45,
         date: DateTime.now(),
         category: Category.food),
     ExpenseStructure(
@@ -47,7 +42,7 @@ class _ExpensesState extends State<Expenses> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('XpenseTrack'),
+        title: Text('Xpense'),
         actions: [
           IconButton(
             onPressed: _openAddExpenseOverLay,
