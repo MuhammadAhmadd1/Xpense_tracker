@@ -9,11 +9,17 @@ class NewExpense extends StatefulWidget {
 }
 
 class _NewExpenseState extends State<NewExpense> {
+  // Controllers for handling text input
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+
+  // Selected date for the expense (initially null)
   DateTime? _selectedDate;
+
+  // Default category for the dropdown
   Category _selectedCategory = Category.food;
 
+  // Function to open a date picker and allow the user to select a date
   void _presentDatePicker() async {
     final now = DateTime.now();
     final firstDate = DateTime(now.year - 1, now.month, now.day);
@@ -24,17 +30,46 @@ class _NewExpenseState extends State<NewExpense> {
         firstDate: firstDate,
         lastDate: now);
 
+    // Update the selected date when the user picks one
     setState(() {
       _selectedDate = pickedDate;
     });
   }
 
-//dispose is called automatically by flutter when the widget & it's state are about to be destroyed(removed from UI)
-//In this case it will be called when _openAddExpenseOverLay is removed by the user
-//helps in keeping the memory optomized
+  // Function to validate and submit the expense data
+  void _submitExpenseData() {
+    // Convert amount from text to double, returns null if invalid
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+
+    // Check if title is empty (validation)
+    if (_titleController.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _selectedDate == null) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Invalid Input'),
+          content: const Text(
+            'Please make sure a valid title, amount, date and category was entered.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  // Dispose method to free up memory when the widget is removed
   @override
   void dispose() {
-    _titleController.dispose();
+    _titleController.dispose(); // Dispose title controller
     super.dispose();
   }
 
@@ -44,6 +79,7 @@ class _NewExpenseState extends State<NewExpense> {
       padding: EdgeInsets.all(16),
       child: Column(
         children: [
+          // Text field for entering expense title
           TextField(
             controller: _titleController,
             maxLength: 50,
@@ -53,6 +89,7 @@ class _NewExpenseState extends State<NewExpense> {
           ),
           Row(
             children: [
+              // Text field for entering the expense amount
               Expanded(
                 child: TextField(
                   controller: _amountController,
@@ -69,11 +106,13 @@ class _NewExpenseState extends State<NewExpense> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  // Display selected date or default message
                   Text(
                     _selectedDate == null
                         ? 'No Date Selected'
                         : formatter.format(_selectedDate!),
                   ),
+                  // Button to open date picker
                   IconButton(
                     onPressed: () {
                       _presentDatePicker();
@@ -87,6 +126,7 @@ class _NewExpenseState extends State<NewExpense> {
           const SizedBox(height: 16),
           Row(
             children: [
+              // Dropdown for selecting expense category
               DropdownButton(
                   value: _selectedCategory,
                   items: Category.values
@@ -108,18 +148,16 @@ class _NewExpenseState extends State<NewExpense> {
                     });
                   }),
               const Spacer(),
+              // Cancel button to close the form
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
                 child: Text('Cancel'),
               ),
+              // Save button to submit the expense
               ElevatedButton(
-                  onPressed: () {
-                    print(_titleController.text);
-                    print(_amountController.text);
-                  },
-                  child: Text('Save')),
+                  onPressed: _submitExpenseData, child: Text('Save')),
             ],
           )
         ],
