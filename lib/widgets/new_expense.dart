@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:xtrack/modle/expense_structure.dart';
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({super.key});
+  const NewExpense({super.key, required this.onAddExpense});
+
+  final void Function(ExpenseStructure expense) onAddExpense;
 
   @override
   State<NewExpense> createState() => _NewExpenseState();
@@ -63,7 +65,17 @@ class _NewExpenseState extends State<NewExpense> {
           ],
         ),
       );
+      return;
     }
+    // widget is used to access the function in the extended state
+    widget.onAddExpense(
+      ExpenseStructure(
+          title: _titleController.text,
+          amount: enteredAmount,
+          date: _selectedDate!,
+          category: _selectedCategory),
+    );
+    Navigator.pop(context);
   }
 
   // Dispose method to free up memory when the widget is removed
@@ -76,7 +88,8 @@ class _NewExpenseState extends State<NewExpense> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16),
+      //as the widget is taking the whole screen, by LTRB will are making sure that the padding from each side is perfect and is not being interupted by any Device camera or bar or anything 
+      padding: EdgeInsets.fromLTRB(16,48,16,16),
       child: Column(
         children: [
           // Text field for entering expense title
