@@ -27,13 +27,6 @@ void main() {
         ),
       ),
       //text theme
-      textTheme: ThemeData().textTheme.copyWith(
-            titleLarge: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: kColorScheme.onSecondaryContainer,
-              fontSize: 16,
-            ),
-          ),
     ),
     //lightMode
     theme: ThemeData().copyWith(
@@ -54,14 +47,6 @@ void main() {
           backgroundColor: kColorScheme.primaryContainer,
         ),
       ),
-      //text theme
-      textTheme: ThemeData().textTheme.copyWith(
-            titleLarge: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: kColorScheme.onSecondaryContainer,
-              fontSize: 16,
-            ),
-          ),
     ),
     home: Expenses(),
   ));
