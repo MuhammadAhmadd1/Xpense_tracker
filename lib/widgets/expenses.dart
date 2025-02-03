@@ -1,6 +1,7 @@
 //main screen to output chart and expense list
 
 import 'package:flutter/material.dart';
+import 'package:xtrack/widgets/chart/chart.dart';
 import 'package:xtrack/widgets/expense_list/expense_list.dart';
 import 'package:xtrack/modle/expense_structure.dart';
 import 'package:xtrack/widgets/new_expense.dart';
@@ -94,7 +95,7 @@ class _ExpensesState extends State<Expenses> {
       body: Column(
         children: [
           //CHART
-          Text('Chart'),
+          Chart(expenses: _registeredExpense),
           //EXPENSE LIST
 
           //expanded widget restrics the listview column inside the Column widget

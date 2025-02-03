@@ -16,7 +16,7 @@ void main() {
       colorScheme: kDarkscheme,
       //cardTheme
       cardTheme: CardTheme().copyWith(
-        color: kDarkscheme.onTertiaryFixedVariant,
+        color: kDarkscheme.secondaryContainer,
         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       ),
       //elevatedButton
@@ -26,6 +26,14 @@ void main() {
           foregroundColor: kDarkscheme.onPrimaryContainer,
         ),
       ),
+      //text theme
+      textTheme: ThemeData().textTheme.copyWith(
+            titleLarge: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: kColorScheme.onSecondaryContainer,
+              fontSize: 16,
+            ),
+          ),
     ),
     //lightMode
     theme: ThemeData().copyWith(
@@ -46,6 +54,14 @@ void main() {
           backgroundColor: kColorScheme.primaryContainer,
         ),
       ),
+      //text theme
+      textTheme: ThemeData().textTheme.copyWith(
+            titleLarge: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: kColorScheme.onSecondaryContainer,
+              fontSize: 16,
+            ),
+          ),
     ),
     home: Expenses(),
   ));
