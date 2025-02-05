@@ -17,12 +17,12 @@ class _ExpensesState extends State<Expenses> {
   final List<ExpenseStructure> _registeredExpense = [
     ExpenseStructure(
         title: 'Cinema',
-        amount: 18.23,
+        amount: 180.23,
         date: DateTime.now(),
         category: Category.leisure),
     ExpenseStructure(
         title: 'Biryani',
-        amount: 3.45,
+        amount: 300.45,
         date: DateTime.now(),
         category: Category.food),
     ExpenseStructure(
@@ -34,6 +34,7 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseOverLay() {
     showModalBottomSheet(
+      useSafeArea: true,
       isScrollControlled: true,
       context: context,
       builder: (ctx) => NewExpense(onAddExpense: _addExpenses),
@@ -61,17 +62,21 @@ class _ExpensesState extends State<Expenses> {
       SnackBar(
         duration: Duration(seconds: 3),
         content: const Text('Expense Deleted!'),
-        action: SnackBarAction(label: 'Undo', onPressed: () {
-          setState(() {
-            _registeredExpense.insert(expenseIndex, expense);
-          });
-        },),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            setState(() {
+              _registeredExpense.insert(expenseIndex, expense);
+            });
+          },
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     //when no expense is added
     Widget mainContent = const Center(
       child: Text('No Expense!'),
@@ -92,19 +97,36 @@ class _ExpensesState extends State<Expenses> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          //CHART
-          Chart(expenses: _registeredExpense),
-          //EXPENSE LIST
+      //using a ternary operator to see if the width is less then 600 pixels
+      //it will execute the column  (horizontal) else Row (vertical)
+      body: width < 600
+          ? Column(
+              children: [
+                //CHART
+                Chart(expenses: _registeredExpense),
+                //EXPENSE LIST
 
-          //expanded widget restrics the listview column inside the Column widget
-          Expanded(
-            //expenseList is used to output the expense list
-            child: mainContent,
-          ),
-        ],
-      ),
+                //expanded widget restrics the listview column inside the Column widget
+                Expanded(
+                  //expenseList is used to output the expense list
+                  child: mainContent,
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: Chart(expenses: _registeredExpense),
+                ),
+                //EXPENSE LIST
+
+                //expanded widget restrics the listview column inside the Column widget
+                Expanded(
+                  //expenseList is used to output the expense list
+                  child: mainContent,
+                ),
+              ],
+            ),
     );
   }
 }

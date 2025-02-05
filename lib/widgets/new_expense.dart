@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:xtrack/modle/expense_structure.dart';
 
 class NewExpense extends StatefulWidget {
@@ -38,16 +42,27 @@ class _NewExpenseState extends State<NewExpense> {
     });
   }
 
-  // Function to validate and submit the expense data
-  void _submitExpenseData() {
-    // Convert amount from text to double, returns null if invalid
-    final enteredAmount = double.tryParse(_amountController.text);
-    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
-
-    // Check if title is empty (validation)
-    if (_titleController.text.trim().isEmpty ||
-        amountIsInvalid ||
-        _selectedDate == null) {
+  void _showDialog() {
+    //to find out on which device we are running and then which dialog will run
+    if (Platform.isIOS) {
+      showCupertinoDialog(
+        context: context,
+        builder: (ctx) => CupertinoAlertDialog(
+          title: const Text('Invalid Input'),
+          content: const Text(
+            'Please make sure a valid title, amount, date and category was entered.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        ),
+      );
+    } else {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -65,9 +80,24 @@ class _NewExpenseState extends State<NewExpense> {
           ],
         ),
       );
+    }
+  }
+
+  // Function to validate and submit the expense data
+  void _submitExpenseData() {
+    // Convert amount from text to double, returns null if invalid
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+
+    // Check if title is empty (validation)
+    if (_titleController.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _selectedDate == null) {
+      _showDialog();
       return;
     }
-    // widget is used to access the function in the extended state
+
+    // Call the callback function to add the new expense
     widget.onAddExpense(
       ExpenseStructure(
           title: _titleController.text,
@@ -75,6 +105,8 @@ class _NewExpenseState extends State<NewExpense> {
           date: _selectedDate!,
           category: _selectedCategory),
     );
+
+    // Close the expense input form
     Navigator.pop(context);
   }
 
@@ -82,99 +114,201 @@ class _NewExpenseState extends State<NewExpense> {
   @override
   void dispose() {
     _titleController.dispose(); // Dispose title controller
+    _amountController.dispose(); // Dispose amount controller
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      //as the widget is taking the whole screen, by LTRB will are making sure that the padding from each side is perfect and is not being interupted by any Device camera or bar or anything 
-      padding: EdgeInsets.fromLTRB(16,48,16,16),
-      child: Column(
-        children: [
-          // Text field for entering expense title
-          TextField(
-            controller: _titleController,
-            maxLength: 50,
-            decoration: InputDecoration(
-              label: Text('Title'),
-            ),
-          ),
-          Row(
-            children: [
-              // Text field for entering the expense amount
-              Expanded(
-                child: TextField(
-                  controller: _amountController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    prefixText: '\$ ',
-                    label: Text('amount'),
-                  ),
-                ),
-              ),
-              SizedBox(width: 18),
-              Expanded(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
+    final keyBoardspace = MediaQuery.of(context).viewInsets.bottom;
+
+    return LayoutBuilder(
+      builder: (ctx, constraints) {
+        final width = constraints.maxWidth;
+        return SizedBox(
+          height: double.infinity,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16, 16, 16, keyBoardspace + 16),
+              child: Column(
                 children: [
-                  // Display selected date or default message
-                  Text(
-                    _selectedDate == null
-                        ? 'No Date Selected'
-                        : formatter.format(_selectedDate!),
-                  ),
-                  // Button to open date picker
-                  IconButton(
-                    onPressed: () {
-                      _presentDatePicker();
-                    },
-                    icon: Icon(Icons.calendar_month),
-                  ),
-                ],
-              ))
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              // Dropdown for selecting expense category
-              DropdownButton(
-                  value: _selectedCategory,
-                  items: Category.values
-                      .map(
-                        (category) => DropdownMenuItem(
-                          value: category,
-                          child: Text(
-                            category.name.toUpperCase(),
+                  if (width >= 600)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Title input field
+                        Expanded(
+                          child: TextField(
+                            controller: _titleController,
+                            maxLength: 50,
+                            decoration: InputDecoration(
+                              label: Text('Title'),
+                            ),
                           ),
                         ),
-                      )
-                      .toList(),
-                  onChanged: (value) {
-                    if (value == null) {
-                      return;
-                    }
-                    setState(() {
-                      _selectedCategory = value;
-                    });
-                  }),
-              const Spacer(),
-              // Cancel button to close the form
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('Cancel'),
+                        SizedBox(width: 25),
+                        // Amount input field
+                        Expanded(
+                          child: TextField(
+                            controller: _amountController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              prefixText: '\$ ',
+                              label: Text('amount'),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  else
+                    // Title input field (for smaller screens)
+                    TextField(
+                      controller: _titleController,
+                      maxLength: 50,
+                      decoration: InputDecoration(
+                        label: Text('Title'),
+                      ),
+                    ),
+                  if (width >= 600)
+                    Row(
+                      children: [
+                        // Dropdown for selecting expense category
+                        DropdownButton(
+                          value: _selectedCategory,
+                          items: Category.values
+                              .map(
+                                (category) => DropdownMenuItem(
+                                  value: category,
+                                  child: Text(
+                                    category.name.toUpperCase(),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (value) {
+                            if (value == null) {
+                              return;
+                            }
+                            setState(() {
+                              _selectedCategory = value;
+                            });
+                          },
+                        ),
+                        SizedBox(width: 25),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                _selectedDate == null
+                                    ? 'No Date Selected'
+                                    : formatter.format(_selectedDate!),
+                              ),
+                              IconButton(
+                                onPressed: _presentDatePicker,
+                                icon: Icon(Icons.calendar_month),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  else
+                    Row(
+                      children: [
+                        // Amount input field
+                        Expanded(
+                          child: TextField(
+                            controller: _amountController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              prefixText: '\$ ',
+                              label: Text('amount'),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 24),
+                        // Date picker section
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                _selectedDate == null
+                                    ? 'No Date Selected'
+                                    : formatter.format(_selectedDate!),
+                              ),
+                              IconButton(
+                                onPressed: _presentDatePicker,
+                                icon: Icon(Icons.calendar_month),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 16),
+                  if (width >= 600)
+                    Row(
+                      children: [
+                        const Spacer(),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                          onPressed: _submitExpenseData,
+                          child: Text('Save'),
+                        ),
+                      ],
+                    )
+                  else
+                    Row(
+                      children: [
+                        // Dropdown for selecting category
+                        DropdownButton(
+                            value: _selectedCategory,
+                            items: Category.values
+                                .map(
+                                  (category) => DropdownMenuItem(
+                                    value: category,
+                                    child: Text(
+                                      category.name.toUpperCase(),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (value) {
+                              if (value == null) {
+                                return;
+                              }
+                              setState(() {
+                                _selectedCategory = value;
+                              });
+                            }),
+                        const Spacer(),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                          onPressed: _submitExpenseData,
+                          child: Text('Save'),
+                        ),
+                      ],
+                    )
+                ],
               ),
-              // Save button to submit the expense
-              ElevatedButton(
-                  onPressed: _submitExpenseData, child: Text('Save')),
-            ],
-          )
-        ],
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
