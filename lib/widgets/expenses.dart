@@ -15,21 +15,7 @@ class Expenses extends StatefulWidget {
 
 class _ExpensesState extends State<Expenses> {
   final List<ExpenseStructure> _registeredExpense = [
-    ExpenseStructure(
-        title: 'Cinema',
-        amount: 180.23,
-        date: DateTime.now(),
-        category: Category.leisure),
-    ExpenseStructure(
-        title: 'Biryani',
-        amount: 300.45,
-        date: DateTime.now(),
-        category: Category.food),
-    ExpenseStructure(
-        title: 'Begams Expense',
-        amount: 1000,
-        date: DateTime.now(),
-        category: Category.shopping),
+    
   ];
 
   void _openAddExpenseOverLay() {

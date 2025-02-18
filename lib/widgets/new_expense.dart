@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:xtrack/modle/expense_structure.dart';
 
 class NewExpense extends StatefulWidget {
@@ -140,6 +139,7 @@ class _NewExpenseState extends State<NewExpense> {
                         Expanded(
                           child: TextField(
                             controller: _titleController,
+                            textCapitalization: TextCapitalization.sentences,
                             maxLength: 50,
                             decoration: InputDecoration(
                               label: Text('Title'),
@@ -164,6 +164,7 @@ class _NewExpenseState extends State<NewExpense> {
                     // Title input field (for smaller screens)
                     TextField(
                       controller: _titleController,
+                      textCapitalization: TextCapitalization.sentences,
                       maxLength: 50,
                       decoration: InputDecoration(
                         label: Text('Title'),
