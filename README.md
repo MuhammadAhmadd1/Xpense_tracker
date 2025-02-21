@@ -1,16 +1,25 @@
-# xtrack
+# XTrack
 
-A new Flutter project.
+A Flutter expense tracker app that helps you track your expenses efficiently. It also provides a visual representation of your spending trends using charts.
+
+## Features
+- Track daily, weekly, and monthly expenses
+- Visual charts for expense analysis
+- User-friendly interface
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Follow these steps to set up the project:
 
-A few resources to get you started if this is your first Flutter project:
+```sh
+# Clone the repository
+git clone https://github.com/your-username/xtrack.git
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+# Navigate to the project directory
+cd xtrack
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Install dependencies
+flutter pub get
+
+# Run the app
+flutter run
